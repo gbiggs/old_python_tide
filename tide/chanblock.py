@@ -29,9 +29,9 @@ class ChanBlock(object):
         self.name, src_size = struct.unpack_from('<{0}sB'.format(name_size),
                 data)
         data = data[struct.calcsize('<{0}sB'.format(name_size)):]
-        self.src, fmt_size = struct.unpack_from('<{0}sI'.format(src_size),
+        self.src, fmt_size = struct.unpack_from('<{0}BI'.format(src_size),
                 data)
-        data = data[struct.calcsize('<{0}sI'.format(src_size)):]
+        data = data[struct.calcsize('<{0}BI'.format(src_size)):]
         self.fmt = struct.unpack_from('<{0}s'.format(fmt_size), data)[0]
 
     def __str__(self):
