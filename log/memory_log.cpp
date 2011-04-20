@@ -15,6 +15,7 @@
 
 #include <tide/log/memory_log.h>
 
+#include <boost/shared_array.hpp>
 #include <cstring>
 
 using namespace tide;
@@ -66,7 +67,7 @@ ChannelIDMap MemoryLog::channels() const
 
 ChannelNameMap MemoryLog::channels_by_name() const
 {
-    std::map<std::string, ChannelInfo> result;
+    std::map<std::string const, ChannelInfo> result;
     for (ChannelIDMap::const_iterator ii(channels_.begin());
                 ii != channels_.end(); ++ii)
     {
@@ -120,8 +121,8 @@ void MemoryLog::add_entry(ChannelID channel, uint64_t timestamp,
         uint8_t const* const data, size_t size)
 {
     // Copy the data
-    boost::shared_ptr<uint8_t> data_ptr(new uint8_t[size]);
-    memcpy(static_cast<void*>(*data_ptr), data, size);
+    boost::shared_array<uint8_t> data_ptr(new uint8_t[size]);
+    memcpy(data_ptr.get(), data, size);
     boost::shared_ptr<MemoryLogEntryIndex> index_ptr(
             new MemoryLogEntryIndex(channel, timestamp, data_.size(), this));
     indices_[channel].push_back(index_ptr);

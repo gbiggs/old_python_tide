@@ -18,6 +18,7 @@
 #define ENTRY_INDEX_BASE_H__
 
 
+#include <boost/shared_array.hpp>
 #include <boost/shared_ptr.hpp>
 #include <stdint.h>
 #include <tide/log/channels.h>
@@ -28,14 +29,14 @@ namespace tide
     class SerialisedEntry
     {
         public:
-            SerialisedEntry(boost::shared_ptr<uint8_t> data, size_t size);
+            SerialisedEntry(boost::shared_array<uint8_t> data, size_t size);
             SerialisedEntry(SerialisedEntry const& rhs);
 
-            boost::shared_ptr<uint8_t> data() const { return data_; };
+            boost::shared_array<uint8_t> data() const { return data_; };
             size_t size() const { return size_; };
 
         private:
-            boost::shared_ptr<uint8_t> data_;
+            boost::shared_array<uint8_t> data_;
             size_t size_;
     };
 

@@ -18,7 +18,7 @@
 using namespace tide;
 
 
-SerialisedEntry::SerialisedEntry(boost::shared_ptr<uint8_t> data, size_t size)
+SerialisedEntry::SerialisedEntry(boost::shared_array<uint8_t> data, size_t size)
     : data_(data), size_(size)
 {
 }

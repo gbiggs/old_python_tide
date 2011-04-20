@@ -18,7 +18,6 @@
 #define MEMORY_LOG_H__
 
 
-#include <boost/shared_ptr.hpp>
 #include <map>
 #include <stdint.h>
 #include <tide/log/channels.h>
