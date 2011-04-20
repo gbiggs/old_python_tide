@@ -8,7 +8,6 @@ set(hdrs include/tide/views/view_base.h
     )
 
 include_directories(include
-    ${PROJECT_SOURCE_DIR}/common/include
     ${PROJECT_SOURCE_DIR}/log/include)
 
 set(lib_name "tide_views")

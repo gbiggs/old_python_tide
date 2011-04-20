@@ -24,11 +24,15 @@ else(BUILD_SHARED)
     set(TIDE_SHARED "STATIC")
 endif(BUILD_SHARED)
 
+# Global dependencies
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
 # Subdirectories
-add_subdirectory(common)
-#add_subdirectory(log)
+add_subdirectory(log)
 add_subdirectory(views)
 #add_subdirectory(utils)
+add_subdirectory(examples)
 
 # Package creation
 include(InstallRequiredSystemLibraries)

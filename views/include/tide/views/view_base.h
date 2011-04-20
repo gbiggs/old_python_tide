@@ -17,35 +17,25 @@
 #if !defined(VIEW_BASE_H__)
 #define VIEW_BASE_H__
 
-#include <map>
+
+#include <tide/log/channels.h>
 #include <stdint.h>
-#include <tide/common/channels.h>
-#include <tide/log/log_base.h>
+#include <vector>
+
 
 namespace tide
 {
-    typedef unsigned int ModelID;
-
     class ViewBase
     {
         public:
             ViewBase();
             virtual ~ViewBase();
 
-            virtual ModelID add_model(LogBase& model);
-            virtual void rem_model(ModelID& id);
-
-            uint64_t start_time() const { return start_time_; };
-            uint64_t end_time() const { return end_time_; };
+            virtual uint64_t start_time() const = 0;
+            virtual uint64_t end_time() const = 0;
+            virtual std::vector<ChannelInfo> channels() const = 0;
 
         private:
-            std::map<ChannelID, ChannelInfo> channels_;
-            uint64_t start_time_, end_time_;
-
-            std::map<ModelID, LogBase*> models_;
-            ModelID next_mdl_;
-
-            virtual void update_view() = 0;
     };
 };
 

@@ -1,10 +1,14 @@
-set(srcs log_base.cpp
+set(srcs channels.cpp
+    entry_index_base.cpp
+    memory_log.cpp
     )
-set(hdrs include/tide/log/log_base.h
+set(hdrs include/tide/log/channels.h
+    include/tide/log/log_base.h
+    include/tide/log/entry_index_base.h
+    include/tide/log/memory_log.h
     )
 
-include_directories(include
-    ${PROJECT_SOURCE_DIR}/common/include)
+include_directories(include)
 
 set(lib_name "tide_log")
 add_library(${lib_name} ${TIDE_SHARED} ${srcs})
