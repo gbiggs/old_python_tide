@@ -59,14 +59,15 @@ namespace tide
     };
 
 
-    struct IndexComp
+    class IndexComp
     {
-        bool operator()(boost::shared_ptr<EntryIndexBase> const& l,
-                boost::shared_ptr<EntryIndexBase> const& r)
-        {
-            return l->timestamp() < r->timestamp();
-        }
-    } IndexComp;
+        public:
+            bool operator()(boost::shared_ptr<EntryIndexBase> const& l,
+                    boost::shared_ptr<EntryIndexBase> const& r)
+            {
+                return l->timestamp() < r->timestamp();
+            }
+    };
 };
 
 #endif // !defined(ENTRY_INDEX_BASE_H__)

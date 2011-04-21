@@ -44,7 +44,7 @@ namespace tide
             virtual ChannelIDMap channels() const = 0;
             virtual ChannelNameMap channels_by_name() const = 0;
 
-            // Still not sure where the separation needs to be between models
+            // Still not sure where the separation needs to be between logs
             // and views as regards to data indices. It would be nice to
             // minimise views needing to build their own indices when created,
             // but at the same time we need to avoid making assumptions about

@@ -24,7 +24,7 @@
 
 namespace tide
 {
-    typedef std::vector<EntryIndexBase>::const_iterator StreamIterator;
+    typedef Index::const_iterator StreamIterator;
 
     class BasicStreamView
         : public ViewBase
@@ -43,7 +43,7 @@ namespace tide
 
         protected:
             LogBase const& log_;
-            std::vector<EntryIndexBase> indices_;
+            Index const& indices_;
     };
 };
 

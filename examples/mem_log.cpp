@@ -15,9 +15,10 @@
 
 #include <iostream>
 #include <string.h>
-#include <tide/views/basic_stream_view.h>
 #include <tide/log/log_base.h>
 #include <tide/log/memory_log.h>
+#include <tide/views/basic_stream_view.h>
+#include <tide/views/direct_writer.h>
 
 
 // This function creates a log with two channels. The first channel contains
@@ -38,27 +39,31 @@
 // Of course, what would really be useful are some benchmarks of logging
 // performance across varying write orders and formats to help users make an
 // informed decision.
-void write_log(LogBase* const log)
+void write_log(tide::LogBase& log)
 {
     // Data to add
     char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
     int nums[] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 
     // Create a writeable view onto the log
-    DirectWriter writer(log);
+    tide::DirectWriter writer(log);
 
     // Make a channel for the alphabet
-    ChannelInfo alphabet_info("alphabet", "c_types", "memory", "memory",
+    tide::ChannelInfo alphabet_info("alphabet", "c_types", "memory", "memory",
             strlen("memory"), "b", strlen("b"));
-    ChannelID a_id = writer.add_channel("alphabet", "c_types", "memory",
+    tide::ChannelID a_id = writer.add_channel("alphabet", "c_types", "memory",
             "memory", strlen("memory"), "b", strlen("b"));
     // Add a few entries (remember that timestamps are in nanoseconds)
-    writer.add_entry(a_id, 384615384, static_cast<uint8_t*>(&alphabet[0]));
-    writer.add_entry(alphabet_info, 769230768, static_cast<uint8_t const* const>(&alphabet[1]));
-    writer.add_entry(alphabet_info, 1153846152, static_cast<uint8_t const* const>(&alphabet[2]));
-    writer.add_entry(a_id, 1538461536, static_cast<uint8_t const* const>(&alphabet[3]));
+    writer.add_entry(a_id, 384615384,
+            static_cast<uint8_t*>(&alphabet[0]));
+    writer.add_entry(alphabet_info, 769230768,
+            static_cast<uint8_t const* const>(&alphabet[1]));
+    writer.add_entry(alphabet_info, 1153846152,
+            static_cast<uint8_t const* const>(&alphabet[2]));
+    writer.add_entry(a_id, 1538461536,
+            static_cast<uint8_t const* const>(&alphabet[3]));
     // Add an entry in a so-far unallocated channel
-    ChannelInfo nums_info("numbers", "c_types", "memory", "memory",
+    tide::ChannelInfo nums_info("numbers", "c_types", "memory", "memory",
             strlen("memory"), "d", strlen("d"));
     writer.add_entry(nums_info, 1609285920,
             static_cast<uint8_t const* const>(&nums[0]));
@@ -132,7 +137,7 @@ void write_log(LogBase* const log)
 // This function demonstrates reading a stream of data from a log. It reads
 // every entry from the given log in time-order and prints them to the
 // terminal.
-void stream_log(LogBase const* const log)
+void stream_log(tide::LogBase const& log)
 {
     // Create a basic streaming view
     BasicStreamView view(*log);
@@ -149,7 +154,7 @@ void stream_log(LogBase const* const log)
 }
 
 
-void access_log(LogBase const* const log)
+void access_log(tide::LogBase const& log)
 {
 }
 
@@ -157,7 +162,7 @@ void access_log(LogBase const* const log)
 int main(int argc, char** argv)
 {
     // Create an instance of a memory log
-    LogBase* log(new MemoryLog());
+    tide::LogBase* log(new tide::MemoryLog());
     // Write some data into the log
     write_log(log);
     // Read the data out as a stream

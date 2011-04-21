@@ -19,9 +19,8 @@ using namespace tide;
 
 
 BasicStreamView::BasicStreamView(LogBase const& log)
-    : log_(log)
+    : log_(log), indices_(log.get_full_index())
 {
-    indices_ = log_.get_full_index();
 }
 
 
@@ -68,10 +67,11 @@ StreamIterator BasicStreamView::end() const
 
 StreamIterator BasicStreamView::at(uint64_t timestamp) const
 {
-    std::vector<EntryIndexBase>::const_iterator now(indices_.begin());
+    Index::const_iterator now(indices_.begin());
     // Increment to the first value beyond the requested timestamp.
-    // Obviously, this is massively inefficient.
-    while (now->timestamp() < timestamp)
+    // Obviously, this is massively inefficient for large logs and something
+    // better is needed.
+    while (now->get()->timestamp() < timestamp)
     {
         now++;
     }

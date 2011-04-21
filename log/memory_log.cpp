@@ -37,7 +37,10 @@ MemoryLogEntryIndex::MemoryLogEntryIndex(MemoryLogEntryIndex const& rhs)
 
 SerialisedEntry const MemoryLogEntryIndex::data() const
 {
-    return source_->data_[chan_][offset_];
+    // operator[] is not const for maps so can't use it in a const method
+    std::map<ChannelID, std::vector<SerialisedEntry> >::const_iterator ii =
+        source_->data_.find(chan_);
+    return ii->second[offset_];
 }
 
 
@@ -86,7 +89,7 @@ Index MemoryLog::get_full_index() const
     {
         result.insert(result.end(), ii->second.begin(), ii->second.end());
     }
-    std::sort(result.begin(), result.end(), IndexComp);
+    std::sort(result.begin(), result.end(), IndexComp());
 }
 
 
