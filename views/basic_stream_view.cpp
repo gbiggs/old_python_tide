@@ -18,8 +18,8 @@
 using namespace tide;
 
 
-BasicStreamView::BasicStreamView(LogBase const& log)
-    : log_(log), indices_(log.get_full_index())
+BasicStreamView::BasicStreamView(boost::shared_ptr<Log> const log)
+    : log_(log), indices_(log->get_full_index())
 {
 }
 
@@ -31,21 +31,28 @@ BasicStreamView::~BasicStreamView()
 
 uint64_t BasicStreamView::start_time() const
 {
-    return log_.start_time();
+    return log_->start_time();
 }
 
 
 uint64_t BasicStreamView::end_time() const
 {
-    return log_.end_time();
+    return log_->end_time();
 }
 
 
-std::vector<ChannelInfo> BasicStreamView::channels() const
+ChannelIDMap BasicStreamView::channels() const
+{
+    return log_->channels();
+}
+
+
+std::vector<ChannelInfo> BasicStreamView::channel_list() const
 {
     std::vector<ChannelInfo> result;
-    for(ChannelIDMap::const_iterator ii(log_.channels().begin());
-            ii != log_.channels().end(); ++ii)
+    ChannelIDMap channels(log_->channels());
+    for(ChannelIDMap::const_iterator ii(channels.begin());
+            ii != channels.end(); ++ii)
     {
         result.push_back(ii->second);
     }

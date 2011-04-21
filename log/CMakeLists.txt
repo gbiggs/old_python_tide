@@ -1,10 +1,10 @@
 set(srcs channels.cpp
-    entry_index_base.cpp
+    entry_index.cpp
     memory_log.cpp
     )
 set(hdrs include/tide/log/channels.h
-    include/tide/log/log_base.h
-    include/tide/log/entry_index_base.h
+    include/tide/log/log.h
+    include/tide/log/entry_index.h
     include/tide/log/memory_log.h
     )
 

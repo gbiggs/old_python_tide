@@ -19,7 +19,7 @@
 
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/shared_ptr.hpp>
-#include <tide/log/entry_index_base.h>
+#include <tide/log/entry_index.h>
 
 
 namespace tide
@@ -30,17 +30,17 @@ namespace tide
     // storing an entire huge index in memory. This class provides a starting
     // point for doing so.
     class StreamIterator
-        : public boost::iterator_facade<StreamIterator, EntryIndexBase,
+        : public boost::iterator_facade<StreamIterator, EntryIndex,
             boost::forward_traversal_tag>
     {
         public:
-            StreamIterator(boost::shared_ptr<std::vector<EntryIndexBase> > index,
-                    std::vector<EntryIndexBase>:: pos_);
+            StreamIterator(boost::shared_ptr<std::vector<EntryIndex> > index,
+                    std::vector<EntryIndex>:: pos_);
             StreamIterator(StreamIterator const& rhs);
 
         private:
-            std::vector<EntryIndexBase>::const_iterator pos_;
-            boost::shared_ptr<std::vector<EntryIndexBase> > index_;
+            std::vector<EntryIndex>::const_iterator pos_;
+            boost::shared_ptr<std::vector<EntryIndex> > index_;
     };
 };
 

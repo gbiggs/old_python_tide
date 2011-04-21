@@ -13,7 +13,7 @@
  * Base class for log entry indices.
  */
 
-#include <tide/log/entry_index_base.h>
+#include <tide/log/entry_index.h>
 
 using namespace tide;
 
@@ -30,19 +30,19 @@ SerialisedEntry::SerialisedEntry(SerialisedEntry const& rhs)
 }
 
 
-EntryIndexBase::EntryIndexBase(ChannelID channel, uint64_t timestamp)
+EntryIndex::EntryIndex(ChannelID channel, uint64_t timestamp)
     : chan_(channel), ts_(timestamp)
 {
 }
 
 
-EntryIndexBase::EntryIndexBase(EntryIndexBase const& rhs)
+EntryIndex::EntryIndex(EntryIndex const& rhs)
     : chan_(rhs.chan_), ts_(rhs.ts_)
 {
 }
 
 
-EntryIndexBase::~EntryIndexBase()
+EntryIndex::~EntryIndex()
 {
 }
 

@@ -14,8 +14,8 @@
  */
 
 
-#if !defined(VIEW_BASE_H__)
-#define VIEW_BASE_H__
+#if !defined(VIEW_H__)
+#define VIEW_H__
 
 
 #include <tide/log/channels.h>
@@ -25,19 +25,17 @@
 
 namespace tide
 {
-    class ViewBase
+    class View
     {
         public:
-            ViewBase();
-            virtual ~ViewBase();
+            View() {};
+            virtual ~View() {};
 
             virtual uint64_t start_time() const = 0;
             virtual uint64_t end_time() const = 0;
-            virtual std::vector<ChannelInfo> channels() const = 0;
-
-        private:
+            virtual ChannelIDMap channels() const = 0;
     };
 };
 
-#endif // !defined(VIEW_BASE_H__)
+#endif // !defined(VIEW_H__)
 

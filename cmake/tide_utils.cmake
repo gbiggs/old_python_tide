@@ -175,6 +175,7 @@ macro(GET_OS_INFO)
     endif(OS_IS_LINUX)
     set(INCLUDE_INSTALL_DIR
         "include/${PROJECT_NAME_LOWER}")
+    set(BIN_INSTALL_DIR "bin")
 endmacro(GET_OS_INFO)
 
 

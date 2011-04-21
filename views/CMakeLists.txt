@@ -1,10 +1,11 @@
-set(srcs view_base.cpp
-    basic_stream_view.cpp
+set(srcs basic_stream_view.cpp
     basic_ra_view.cpp
+    direct_writer.cpp
     )
-set(hdrs include/tide/views/view_base.h
+set(hdrs include/tide/views/view.h
     include/tide/views/basic_stream_view.h
     include/tide/views/basic_ra_view.h
+    include/tide/views/direct_writer.h
     )
 
 include_directories(include

@@ -17,6 +17,9 @@
 
 #include <boost/shared_array.hpp>
 #include <cstring>
+#include <stdexcept>
+#include <iostream>
+
 
 using namespace tide;
 
@@ -24,13 +27,13 @@ using namespace tide;
 MemoryLogEntryIndex::MemoryLogEntryIndex(ChannelID channel,
         uint64_t timestamp, unsigned int offset,
         MemoryLog const* const source)
-    : EntryIndexBase(channel, timestamp), offset_(offset), source_(source)
+    : EntryIndex(channel, timestamp), offset_(offset), source_(source)
 {
 }
 
 
 MemoryLogEntryIndex::MemoryLogEntryIndex(MemoryLogEntryIndex const& rhs)
-    : EntryIndexBase(rhs), offset_(rhs.offset_), source_(rhs.source_)
+    : EntryIndex(rhs), offset_(rhs.offset_), source_(rhs.source_)
 {
 }
 
@@ -64,7 +67,7 @@ MemoryLog::~MemoryLog()
 
 ChannelIDMap MemoryLog::channels() const
 {
-    // Need to reverse the 
+    return channels_;
 }
 
 
@@ -80,6 +83,25 @@ ChannelNameMap MemoryLog::channels_by_name() const
 }
 
 
+ChannelID MemoryLog::get_channel_id(std::string name) const
+{
+    ChannelIDMap matches;
+    ChannelIDMap::const_iterator ii(channels_.begin());
+    for (; ii != channels_.end(); ++ii)
+    {
+        if (ii->second.name() == name)
+        {
+            break;
+        }
+    }
+    if (ii == channels_.end())
+    {
+        throw std::runtime_error(name);
+    }
+    return ii->first;
+}
+
+
 Index MemoryLog::get_full_index() const
 {
     Index result;
@@ -90,6 +112,7 @@ Index MemoryLog::get_full_index() const
         result.insert(result.end(), ii->second.begin(), ii->second.end());
     }
     std::sort(result.begin(), result.end(), IndexComp());
+    return result;
 }
 
 
@@ -126,10 +149,10 @@ void MemoryLog::add_entry(ChannelID channel, uint64_t timestamp,
     // Copy the data
     boost::shared_array<uint8_t> data_ptr(new uint8_t[size]);
     memcpy(data_ptr.get(), data, size);
-    boost::shared_ptr<MemoryLogEntryIndex> index_ptr(
+    boost::shared_ptr<EntryIndex> index_ptr(
             new MemoryLogEntryIndex(channel, timestamp, data_.size(), this));
     indices_[channel].push_back(index_ptr);
-    data_[channel].push_back(SerialisedEntry(data_ptr, timestamp));
+    data_[channel].push_back(SerialisedEntry(data_ptr, size));
 
     if (timestamp < start_time_)
     {

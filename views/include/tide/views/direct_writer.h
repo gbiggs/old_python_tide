@@ -10,7 +10,9 @@
  * Licensed under the Eclipse Public License -v 1.0 (EPL)
  * http://www.opensource.org/licenses/eclipse-1.0.txt
  *
- * Simple writer view.
+ * Simple writer view. This view is very close to the underlying log API. It
+ * would be good to have some better views, e.g. one providing writable
+ * iterators, or a stream-based view.
  */
 
 
@@ -18,31 +20,33 @@
 #define DIRECT_WRITER_H__
 
 
+#include <boost/shared_ptr.hpp>
 #include <stdint.h>
 #include <string>
 #include <tide/log/channels.h>
-#include <tide/log/log_base.h>
-#include <tide/views/view_base.h>
+#include <tide/log/log.h>
+#include <tide/views/view.h>
 
 
 namespace tide
 {
     class DirectWriter
-        : public ViewBase
+        : public View
     {
         public:
-            DirectWriter(LogBase& log);
+            DirectWriter(boost::shared_ptr<Log> const log);
             DirectWriter(DirectWriter const& rhs);
             virtual ~DirectWriter();
 
             virtual uint64_t start_time() const;
             virtual uint64_t end_time() const;
-            virtual std::vector<ChannelInfo> channels() const;
+            virtual ChannelIDMap channels() const;
 
             virtual ChannelID add_channel(std::string name,
                 std::string source_type, std::string source,
-                uint8_t const* const raw_source, size_t raw_source_size,
-                uint8_t const* const format, size_t format_size);
+                boost::shared_array<uint8_t> const raw_source,
+                size_t raw_source_size,
+                boost::shared_array<uint8_t> const format, size_t format_size);
 
             virtual void add_entry(ChannelID const& channel,
                 uint64_t timestamp, uint8_t const* const data, size_t size);
@@ -50,7 +54,7 @@ namespace tide
                 uint64_t timestamp, uint8_t const* const data, size_t size);
 
         protected:
-            LogBase& log_;
+            boost::shared_ptr<Log> log_;
     };
 };
 

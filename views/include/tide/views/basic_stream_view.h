@@ -17,9 +17,10 @@
 #define BASIC_STREAM_VIEW_H__
 
 
-#include <tide/views/view_base.h>
-#include <tide/log/entry_index_base.h>
-#include <tide/log/log_base.h>
+#include <boost/shared_ptr.hpp>
+#include <tide/views/view.h>
+#include <tide/log/entry_index.h>
+#include <tide/log/log.h>
 
 
 namespace tide
@@ -27,23 +28,24 @@ namespace tide
     typedef Index::const_iterator StreamIterator;
 
     class BasicStreamView
-        : public ViewBase
+        : public View
     {
         public:
-            BasicStreamView(LogBase const& log);
+            BasicStreamView(boost::shared_ptr<Log> const log);
             virtual ~BasicStreamView();
 
             virtual uint64_t start_time() const;
             virtual uint64_t end_time() const;
-            virtual std::vector<ChannelInfo> channels() const;
+            virtual ChannelIDMap channels() const;
+            virtual std::vector<ChannelInfo> channel_list() const;
 
             virtual StreamIterator begin() const;
             virtual StreamIterator end() const;
             virtual StreamIterator at(uint64_t timestamp) const;
 
         protected:
-            LogBase const& log_;
-            Index const& indices_;
+            boost::shared_ptr<Log> const log_;
+            Index indices_;
     };
 };
 

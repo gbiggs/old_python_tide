@@ -16,8 +16,13 @@
 #if !defined(CHANNELS_H__)
 #define CHANNELS_H__
 
+
+#include <boost/shared_array.hpp>
+#include <iostream>
+#include <map>
 #include <stdint.h>
 #include <string>
+
 
 namespace tide
 {
@@ -27,9 +32,10 @@ namespace tide
     {
         public:
             ChannelInfo();
-            ChannelInfo(std::string name, std::string source_type,
-                    std::string source, uint8_t const* const raw_source,
-                    size_t raw_source_size, uint8_t const* const format,
+            ChannelInfo(std::string name, std::string source_type, std::string
+                    source, boost::shared_array<uint8_t> const raw_source,
+                    size_t raw_source_size,
+                    boost::shared_array<uint8_t> const format,
                     size_t format_size);
             ChannelInfo(ChannelInfo const& rhs);
             ~ChannelInfo();
@@ -40,26 +46,40 @@ namespace tide
             void source_type(std::string type) { source_type_ = type; };
             std::string source() const { return source_; };
             void source(std::string source) { source_ = source; };
-            uint8_t const* raw_source() const { return raw_source_; };
+            boost::shared_array<uint8_t> const raw_source() const
+                { return raw_source_; };
             size_t raw_source_size() const { return raw_source_size_; };
-            void raw_source(uint8_t const* const raw_source, size_t size);
+            void raw_source(boost::shared_array<uint8_t> const raw_source,
+                    size_t size);
+            boost::shared_array<uint8_t> const format() const { return format_; };
             size_t format_size() const { return format_size_; };
-            void format(uint8_t const* const format, size_t size);
+            void format(boost::shared_array<uint8_t> const format, size_t size);
 
             // Equivalence for a channel is defined as having the same name
             bool operator==(ChannelInfo const& rhs);
             bool operator!=(ChannelInfo const& rhs);
 
+            friend std::ostream& operator<<(std::ostream& o,
+                    ChannelInfo const& ci);
+
         private:
             std::string name_;
             std::string source_type_;
             std::string source_;
-            uint8_t* raw_source_;
+            boost::shared_array<uint8_t> raw_source_;
             size_t raw_source_size_;
-            uint8_t* format_;
+            boost::shared_array<uint8_t> format_;
             size_t format_size_;
     };
+
+
+    typedef std::map<ChannelID const, ChannelInfo> ChannelIDMap;
+    typedef std::map<std::string const, ChannelInfo> ChannelNameMap;
+
+
+    std::ostream& operator<<(std::ostream& o, ChannelInfo const& ci);
 };
+
 
 #endif // !defined(CHANNELS_H__)
 

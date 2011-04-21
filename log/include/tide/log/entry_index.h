@@ -14,8 +14,8 @@
  */
 
 
-#if !defined(ENTRY_INDEX_BASE_H__)
-#define ENTRY_INDEX_BASE_H__
+#if !defined(ENTRY_INDEX_H__)
+#define ENTRY_INDEX_H__
 
 
 #include <boost/shared_array.hpp>
@@ -41,12 +41,12 @@ namespace tide
     };
 
 
-    class EntryIndexBase
+    class EntryIndex
     {
         public:
-            EntryIndexBase(ChannelID channel, uint64_t timestamp);
-            EntryIndexBase(EntryIndexBase const& rhs);
-            virtual ~EntryIndexBase();
+            EntryIndex(ChannelID channel, uint64_t timestamp);
+            EntryIndex(EntryIndex const& rhs);
+            virtual ~EntryIndex();
 
             virtual ChannelID channel() const { return chan_; };
             virtual uint64_t timestamp() const { return ts_; };
@@ -62,13 +62,13 @@ namespace tide
     class IndexComp
     {
         public:
-            bool operator()(boost::shared_ptr<EntryIndexBase> const& l,
-                    boost::shared_ptr<EntryIndexBase> const& r)
+            bool operator()(boost::shared_ptr<EntryIndex> const& l,
+                    boost::shared_ptr<EntryIndex> const& r)
             {
                 return l->timestamp() < r->timestamp();
             }
     };
 };
 
-#endif // !defined(ENTRY_INDEX_BASE_H__)
+#endif // !defined(ENTRY_INDEX_H__)
 

@@ -21,8 +21,8 @@
 #include <map>
 #include <stdint.h>
 #include <tide/log/channels.h>
-#include <tide/log/entry_index_base.h>
-#include <tide/log/log_base.h>
+#include <tide/log/entry_index.h>
+#include <tide/log/log.h>
 #include <utility>
 #include <vector>
 
@@ -32,7 +32,7 @@ namespace tide
     class MemoryLog;
 
     class MemoryLogEntryIndex
-        : public EntryIndexBase
+        : public EntryIndex
     {
         public:
             MemoryLogEntryIndex(ChannelID channel, uint64_t timestamp,
@@ -48,7 +48,7 @@ namespace tide
 
 
     class MemoryLog
-        : public LogBase
+        : public Log
     {
         friend class MemoryLogEntryIndex;
 
@@ -61,6 +61,7 @@ namespace tide
             virtual uint64_t end_time() const { return end_time_; };
             virtual ChannelIDMap channels() const;
             virtual ChannelNameMap channels_by_name() const;
+            virtual ChannelID get_channel_id(std::string name) const;
 
             virtual Index get_full_index() const;
 

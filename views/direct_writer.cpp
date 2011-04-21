@@ -18,7 +18,7 @@
 using namespace tide;
 
 
-DirectWriter::DirectWriter(LogBase& log)
+DirectWriter::DirectWriter(boost::shared_ptr<Log> const log)
     : log_(log)
 {
 }
@@ -31,42 +31,43 @@ DirectWriter::~DirectWriter()
 
 uint64_t DirectWriter::start_time() const
 {
-    return log_.start_time();
+    return log_->start_time();
 }
 
 
 uint64_t DirectWriter::end_time() const
 {
-    return log_.end_time();
+    return log_->end_time();
 }
 
 
-std::vector<ChannelInfo> DirectWriter::channels() const
+ChannelIDMap DirectWriter::channels() const
 {
-    return log_.channels();
+    return log_->channels();
 }
 
 
 ChannelID DirectWriter::add_channel(std::string name, std::string source_type,
-        std::string source, uint8_t const* const raw_source,
-        size_t raw_source_size, uint8_t const* const format, size_t format_size)
+        std::string source, boost::shared_array<uint8_t> const raw_source,
+        size_t raw_source_size, boost::shared_array<uint8_t> const format,
+        size_t format_size)
 {
     ChannelInfo info(name, source_type, source, raw_source, raw_source_size,
             format, format_size);
-    return log_.allocate_channel(info);
+    return log_->allocate_channel(info);
 }
 
 
 void DirectWriter::add_entry(ChannelID const& channel, uint64_t timestamp,
         uint8_t const* const data, size_t size)
 {
-    log_.add_entry(channel, timestamp, data, size);
+    log_->add_entry(channel, timestamp, data, size);
 }
 
 
 void DirectWriter::add_entry(ChannelInfo const& channel, uint64_t timestamp,
         uint8_t const* const data, size_t size)
 {
-    log_.add_entry(channel, timestamp, data, size);
+    log_->add_entry(channel, timestamp, data, size);
 }
 

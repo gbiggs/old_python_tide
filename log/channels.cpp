@@ -28,15 +28,16 @@ ChannelInfo::ChannelInfo()
 
 
 ChannelInfo::ChannelInfo(std::string name, std::string source_type,
-        std::string source, uint8_t const* const raw_source, size_t
-        raw_src_size, uint8_t const* const format, size_t format_size)
+        std::string source,
+        boost::shared_array<uint8_t> const raw_source, size_t raw_src_size,
+        boost::shared_array<uint8_t> const format, size_t format_size)
     : name_(name), source_type_(source_type), source_(source), raw_source_(0),
     raw_source_size_(raw_src_size), format_(0), format_size_(format_size)
 {
-    raw_source_ = new uint8_t[raw_source_size_];
-    memcpy(raw_source_, raw_source, raw_source_size_);
-    format_ = new uint8_t[format_size_];
-    memcpy(format_, format, format_size_);
+    raw_source_ = boost::shared_array<uint8_t>(new uint8_t[raw_source_size_]);
+    memcpy(raw_source_.get(), raw_source.get(), raw_source_size_);
+    format_ = boost::shared_array<uint8_t>(new uint8_t[format_size_]);
+    memcpy(format_.get(), format.get(), format_size_);
 }
 
 
@@ -45,47 +46,32 @@ ChannelInfo::ChannelInfo(ChannelInfo const& rhs)
     raw_source_(0), raw_source_size_(rhs.raw_source_size_), format_(0),
     format_size_(rhs.format_size_)
 {
-    raw_source_ = new uint8_t[raw_source_size_];
-    memcpy(raw_source_, rhs.raw_source_, raw_source_size_);
-    format_ = new uint8_t[format_size_];
-    memcpy(format_, rhs.format_, format_size_);
+    raw_source_ = boost::shared_array<uint8_t>(new uint8_t[raw_source_size_]);
+    memcpy(raw_source_.get(), rhs.raw_source_.get(), raw_source_size_);
+    format_ = boost::shared_array<uint8_t>(new uint8_t[format_size_]);
+    memcpy(format_.get(), rhs.format_.get(), format_size_);
 }
 
 
 ChannelInfo::~ChannelInfo()
 {
-    if (raw_source_ != 0)
-    {
-        delete[] raw_source_;
-    }
-    if (format_ != 0)
-    {
-        delete[] format_;
-    }
 }
 
 
-void ChannelInfo::raw_source(unsigned char const* const raw_source, size_t size)
+void ChannelInfo::raw_source(boost::shared_array<uint8_t> const raw_source,
+        size_t size)
 {
-    if (raw_source_ != 0)
-    {
-        delete[] raw_source_;
-    }
-    raw_source_ = new unsigned char[size];
-    memcpy(raw_source_, raw_source, size);
     raw_source_size_ = size;
+    raw_source_ = boost::shared_array<uint8_t>(new uint8_t[raw_source_size_]);
+    memcpy(raw_source_.get(), raw_source.get(), size);
 }
 
 
-void ChannelInfo::format(unsigned char const* const format, size_t size)
+void ChannelInfo::format(boost::shared_array<uint8_t> const format, size_t size)
 {
-    if (format_ != 0)
-    {
-        delete[] format_;
-    }
-    format_ = new uint8_t[size];
-    memcpy(format_, format, size);
     format_size_ = size;
+    format_ = boost::shared_array<uint8_t>(new uint8_t[format_size_]);
+    memcpy(format_.get(), format.get(), size);
 }
 
 
@@ -98,5 +84,11 @@ bool ChannelInfo::operator==(ChannelInfo const& rhs)
 bool ChannelInfo::operator!=(ChannelInfo const& rhs)
 {
     return !(*this == rhs);
+}
+
+
+std::ostream& tide::operator<<(std::ostream& o, ChannelInfo const& ci)
+{
+    return o << ci.name_ << ':' << ci.source_type_ << ':' << ci.source_;
 }
 
