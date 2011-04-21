@@ -20,7 +20,6 @@
 #include <stdexcept>
 #include <iostream>
 
-
 using namespace tide;
 
 
@@ -149,10 +148,11 @@ void MemoryLog::add_entry(ChannelID channel, uint64_t timestamp,
     // Copy the data
     boost::shared_array<uint8_t> data_ptr(new uint8_t[size]);
     memcpy(data_ptr.get(), data, size);
-    boost::shared_ptr<EntryIndex> index_ptr(
-            new MemoryLogEntryIndex(channel, timestamp, data_.size(), this));
-    indices_[channel].push_back(index_ptr);
     data_[channel].push_back(SerialisedEntry(data_ptr, size));
+    boost::shared_ptr<EntryIndex> index_ptr(
+            new MemoryLogEntryIndex(channel, timestamp,
+                data_[channel].size() - 1, this));
+    indices_[channel].push_back(index_ptr);
 
     if (timestamp < start_time_)
     {

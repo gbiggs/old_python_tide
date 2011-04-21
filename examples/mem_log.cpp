@@ -178,14 +178,12 @@ void stream_log(boost::shared_ptr<tide::Log> const log)
         if (*(view.channels()[data_itr->get()->channel()].format().get()) == 'b')
         {
             std::cout << data_itr->get()->data().size() << "\t";
-            printf("%p\t", data_itr->get()->data().data().get());
             std::cout <<
                 *reinterpret_cast<char const*>(data_itr->get()->data().data().get());
         }
         else if (*(view.channels()[data_itr->get()->channel()].format().get()) == 'd')
         {
             std::cout << data_itr->get()->data().size() << "\t";
-            printf("%p\t", data_itr->get()->data().data().get());
             std::cout <<
                 *reinterpret_cast<int const*>(data_itr->get()->data().data().get());
         }
